@@ -25,8 +25,7 @@ std::pair<double, size_t> compute_via_iteration_method(
 	std::function<double(double)> g_x
 ) throw(std::runtime_error)
 {
-	double x0 = (interval.first + interval.second) / 2;
-	double x_i = x0;
+	double x_i = (interval.first + interval.second) / 2;
 	size_t iterations = 1;
 
 	while (true)
