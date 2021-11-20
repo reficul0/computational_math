@@ -17,7 +17,8 @@ double clamp(double n, double lower, double upper)
 std::pair<double, size_t> compute_min_via_scanning_method(
 	std::pair<double/*a*/, double/*b*/> interval,
 	const double eps,
-	std::function<double(double)> f_x
+	std::function<double(double)> f_x,
+	std::function<bool(double, double)> comparator
 ) throw(std::runtime_error)
 {
 	double step = (interval.second - interval.first) / 2;
@@ -40,7 +41,7 @@ std::pair<double, size_t> compute_min_via_scanning_method(
 		const auto f_x_next = f_x(x_next);
 
 		// Если функция начала возрастать ..
-		if (f_x_next > f_x_i)
+		if (comparator(f_x_next, f_x_i))
 		{
 			// .. и нужная точность достигнута ..
 			if (abs(x_i - x_next) <= eps)
@@ -58,7 +59,7 @@ std::pair<double, size_t> compute_min_via_scanning_method(
 
 		if (iterations > 10000)
 			throw std::runtime_error(
-				"Обнаружено зависание, слишком большое количество итераций: " + std::to_string(iterations)
+				"Обнаружено зависание, количество итераций: " + std::to_string(iterations)
 				+ ", корень: " + std::to_string(x_i)
 			);
 	}
@@ -90,8 +91,8 @@ int main()
 		
 		try
 		{
-			const auto res = compute_min_via_scanning_method(interval, eps, f_x);
-			std::cout << "\nx = " << res.first << "; iterations = " << res.second << std::endl;
+			const auto res = compute_min_via_scanning_method(interval, eps, f_x, std::greater<>());
+			std::cout << "\nx = " << res.first << "; iterations = " << res.second << "; f(x) = " << f_x(res.first) << std::endl;
 		}
 		catch (const std::exception &e)
 		{

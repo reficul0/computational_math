@@ -50,7 +50,7 @@ std::pair<double, size_t> compute_via_iteration_method(
 
 		if (iterations > 10000)
 			throw std::runtime_error(
-				"Обнаружено зависание, слишком большое количество итераций: " + std::to_string(iterations)
+				"Обнаружено зависание, количество итераций: " + std::to_string(iterations)
 				+ ", корень: " + std::to_string(x_i)
 			);
 	}
@@ -81,7 +81,8 @@ void check_convergence_condition(
 int main()
 {
 	setlocale(LC_ALL, "ru_RU");
-	
+
+	auto f_x = [](double x) { return 4 * x + exp(x); };
 	auto g_x = [](double x) { return -exp(x) / 4; };
 	while (true)
 	{
@@ -106,7 +107,7 @@ int main()
 			check_convergence_condition(interval, g_x);
 
 			const auto res = compute_via_iteration_method(interval, eps, g_x);
-			std::cout << "\nx = " << res.first << "; iterations = " << res.second << std::endl;
+			std::cout << "\nx = " << res.first << "; iterations = " << res.second << "; f(x) = " << f_x(res.first) << std::endl;
 		}
 		catch (const std::exception &e)
 		{
