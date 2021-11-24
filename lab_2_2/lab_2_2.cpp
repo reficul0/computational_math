@@ -62,7 +62,7 @@ int main()
 {
 	setlocale(LC_ALL, "ru_RU");
 
-	auto y = [](double x) { return x * x; };
+	auto y = [](double x) { return x * x + 4; };
 	while (true)
 	{
 		std::pair<double, double> interval;
