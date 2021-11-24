@@ -1,7 +1,4 @@
-﻿// lab_2_1.cpp : Этот файл содержит функцию "main". Здесь начинается и заканчивается выполнение программы.
-//
-
-#include "pch.h"
+﻿#include "pch.h"
 
 #include <functional>
 #include <iomanip>
@@ -17,7 +14,7 @@ double get_derivative(
 }
 
 // 1. Дана функция y=f(x) Вычислить с заданной точностью производные y` в точках x=1.2+0.1*k, k=0,..10
-std::tuple<double/*y`*/, double/*delta_x*/, size_t> get_derivative_eps(
+std::tuple<double/*y`*/, double/*x*/, size_t> get_derivative_eps(
 	std::function<double(double)> y,
 	double x,
 	double eps
