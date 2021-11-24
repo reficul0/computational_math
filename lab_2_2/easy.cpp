@@ -77,7 +77,6 @@ int fake_main()
 	{
 		double a = 0,
 			   b = 0;
-		std::pair<double, double> interval;
 
 		std::cout << "Enter interval [a, b]." << std::endl;
 		std::cout << "Enter a: ";
