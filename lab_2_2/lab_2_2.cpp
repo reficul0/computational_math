@@ -5,14 +5,14 @@
 #include <iostream>
 #include <string>
 
-double integrate(
+double integrate_by_left_rectangles_method(
 	double x_0,
 	size_t N,
 	double h,
 	std::function<double(double)> y
 ) {
 	double x = x_0,
-		  integral = h * y(x);
+		   integral = h * y(x);
 
 	#pragma omp parallel for reduction(+:integral) private(x)
 	for (int j = 1; j <= N; ++j)
@@ -23,14 +23,14 @@ double integrate(
 	return integral;
 }
 
-std::tuple<double/*integral*/, size_t/*N*/, size_t> integrate_by_rectangle_method(
+std::tuple<double/*integral*/, size_t/*N*/, size_t> integrate_by_left_rectangles_method_eps(
 	std::pair<double/*a*/, double/*b*/> interval,
 	const double eps,
 	std::function<double(double)> y
 ) {
 	size_t N = 2;
 	double h = (interval.second - interval.first) / N,
-		   integral_i = integrate(interval.first, N, h, y);
+		   integral_i = integrate_by_left_rectangles_method(interval.first, N, h, y);
 
 	size_t iterations = 1;
 	while (true)
@@ -42,7 +42,7 @@ std::tuple<double/*integral*/, size_t/*N*/, size_t> integrate_by_rectangle_metho
 			);
 		N *= 2;
 		h /= 2;
-		const auto integral_next = integrate(interval.first, N, h, y);
+		const auto integral_next = integrate_by_left_rectangles_method(interval.first, N, h, y);
 
 		// Если нужная точность достигнута ..
 		if (abs(integral_i - integral_next) < eps)
@@ -84,7 +84,7 @@ int main()
 		std::cout << "y = x^2+4" << std::endl;
 		try
 		{
-			const auto res = integrate_by_rectangle_method(interval, eps, y);
+			const auto res = integrate_by_left_rectangles_method_eps(interval, eps, y);
 			std::cout << "N = " << std::setw(4) << std::setprecision(10) << std::get<1>(res)
 					  << "; integral = " << std::setprecision(10) << std::get<0>(res)
 					  << "; iterations = " << std::get<2>(res) << std::endl;
