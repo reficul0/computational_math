@@ -57,8 +57,16 @@ int main()
 	setlocale(LC_ALL, "ru_RU");
 
 	auto y = [](double x) { return sqrt(x); };
-	
 	std::cout << "y = sqrt(x)" << std::endl << std::endl;
+	
+	std::pair<double, double> interval;
+	std::cout << "Enter interval [a, b]." << std::endl;
+	std::cout << "Enter a: ";
+	std::cin >> interval.first;
+	std::cout << "Enter b: ";
+	std::cin >> interval.second;
+	std::cout << std::endl;
+
 	std::map<double, double> interpolation_table{
 		{100, 10},
 		{121, 11},
@@ -66,7 +74,8 @@ int main()
 		{25, 5},
 		{4, 2},
 	};
-	for (int i = 40; i > 0; i -= 8)
+	auto h = (interval.second - interval.first) / 8;
+	for (size_t i = interval.first; i <= interval.second; i += h)
 		interpolation_table.emplace(i, y(i));
 	
 	std::cout << "Interpolation table:" << std::endl;
