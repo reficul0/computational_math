@@ -17,36 +17,35 @@ double interpolate_via_Newton(double x, std::map<double/*x*/, double/*y*/> const
 {
 	auto i_cur = interpolation_table.begin();
 	const auto i_end = interpolation_table.end();
-
-	std::function<double(std::vector<decltype(i_cur)>, size_t, size_t)> get_divided_difference;
+	using iterator_t = decltype(i_cur);
+	
+	std::function<double(iterator_t, iterator_t)> get_divided_difference;
 	get_divided_difference = 
 		[x, &interpolation_table, &get_divided_difference]
-		(std::vector<decltype(i_cur)> const &divided_difference_args, size_t first_offs, size_t last_offs)
+		(iterator_t front, iterator_t back)
 	{
-		if(last_offs == first_offs)
-			return divided_difference_args[first_offs]->second;
+		if(front == back)
+			return front->second;
 
-		return (get_divided_difference(divided_difference_args, first_offs+1, last_offs) 
-			  - get_divided_difference(divided_difference_args, first_offs  , last_offs-1)
+		auto front_next = front; ++front_next;
+		auto back_next  = back;	 --back_next;
+			
+		return (get_divided_difference(front_next, back)
+			  - get_divided_difference(front, back_next)
 			)
-			/ (divided_difference_args[last_offs]->first - divided_difference_args[first_offs]->first);
+			/ (back->first - front->first);
 	};
 
 	double result = 0;
 	for(; i_cur != i_end; ++i_cur)
 	{
 		double formula_member = 1;
-		std::vector<decltype(i_cur)> divided_difference_args;
 		
 		auto k_cur = interpolation_table.begin();
 		for (; k_cur != i_cur; ++k_cur)
-		{
-			divided_difference_args.push_back(k_cur);
 			formula_member *= x - k_cur->first;
-		}
-		divided_difference_args.push_back(i_cur);
 
-		formula_member *= get_divided_difference(divided_difference_args, 0, divided_difference_args.size()-1);
+		formula_member *= get_divided_difference(interpolation_table.begin(), i_cur);
 
 		result += formula_member;
 	}

@@ -89,7 +89,7 @@ int main()
 		{25, 5},
 		{4, 2},
 	};
-	for (int i = 100; i > 0; i-=4)
+	for (int i = 40; i > 0; i -= 8)
 		interpolation_table.emplace(i, y(i));
 	
 	std::cout << "Interpolation table:" << std::endl;
