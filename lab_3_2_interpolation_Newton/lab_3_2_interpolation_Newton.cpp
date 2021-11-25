@@ -18,29 +18,25 @@ double interpolate_via_Newton(double x, std::map<double/*x*/, double/*y*/> const
 	auto i_cur = interpolation_table.begin();
 	const auto i_end = interpolation_table.end();
 
-	std::function<double(std::list<decltype(i_cur)>)> get_divided_difference;
+	std::function<double(std::vector<decltype(i_cur)>, size_t, size_t)> get_divided_difference;
 	get_divided_difference = 
 		[x, &interpolation_table, &get_divided_difference]
-		(std::list<decltype(i_cur)> divided_difference_args)
+		(std::vector<decltype(i_cur)> const &divided_difference_args, size_t first_offs, size_t last_offs)
 	{
-		if(divided_difference_args.size() == 1)
-			return divided_difference_args.front()->second;
+		if(last_offs == first_offs)
+			return divided_difference_args[first_offs]->second;
 
-		auto args_wo_first = divided_difference_args;
-		args_wo_first.pop_front();
-
-		auto args_wo_last = divided_difference_args;
-		args_wo_last.pop_back();
-
-		return (get_divided_difference(args_wo_first) - get_divided_difference(args_wo_last))
-			/ (divided_difference_args.back()->first - divided_difference_args.front()->first);
+		return (get_divided_difference(divided_difference_args, first_offs+1, last_offs) 
+			  - get_divided_difference(divided_difference_args, first_offs  , last_offs-1)
+			)
+			/ (divided_difference_args[last_offs]->first - divided_difference_args[first_offs]->first);
 	};
 
 	double result = 0;
 	for(; i_cur != i_end; ++i_cur)
 	{
 		double formula_member = 1;
-		std::list<decltype(i_cur)> divided_difference_args;
+		std::vector<decltype(i_cur)> divided_difference_args;
 		
 		auto k_cur = interpolation_table.begin();
 		for (; k_cur != i_cur; ++k_cur)
@@ -50,8 +46,7 @@ double interpolate_via_Newton(double x, std::map<double/*x*/, double/*y*/> const
 		}
 		divided_difference_args.push_back(i_cur);
 
-		if(divided_difference_args.empty() == false)
-			formula_member *= get_divided_difference(divided_difference_args);
+		formula_member *= get_divided_difference(divided_difference_args, 0, divided_difference_args.size()-1);
 
 		result += formula_member;
 	}
@@ -64,7 +59,7 @@ int main()
 
 	auto y = [](double x) { return sqrt(x); };
 	
-	std::cout << "y = sqrt(x)" << std::endl;
+	std::cout << "y = sqrt(x)" << std::endl << std::endl;
 	std::map<double, double> interpolation_table{
 		{100, 10},
 		{121, 11},
@@ -72,6 +67,9 @@ int main()
 		{25, 5},
 		{4, 2},
 	};
+	for (int i = 40; i > 0; i -= 8)
+		interpolation_table.emplace(i, y(i));
+	
 	std::cout << "Interpolation table:" << std::endl;
 	for (const auto x_y : interpolation_table)
 	{
@@ -83,16 +81,18 @@ int main()
 
 	auto print_interpolated_f_x = [&interpolation_table, &y](double x)
 	{
-		const auto interpolation_val = interpolate_via_Newton(x, interpolation_table);
+		const auto interpolated_val = interpolate_via_Newton(x, interpolation_table);
 		std::cout << "x = " << std::setw(6) << x
-			<< "; y = " << std::setw(6) << std::setprecision(5) << interpolation_val
-			<< "; error = " << std::setw(6) << std::setprecision(5) << std::abs(y(x) - interpolation_val)
+			<< "; y = " << std::setw(6) << std::setprecision(5) << interpolated_val
+			<< "; error = " << std::setw(6) << std::setprecision(5) << std::abs(y(x) - interpolated_val)
 			<< "\n";
 	};
 
 	std::cout << "Interpolation results:" << std::endl;
 	for (const auto x_y : interpolation_table)
 		print_interpolated_f_x(x_y.first);
+	
+	std::cout << std::endl;
 	print_interpolated_f_x(115);
 	print_interpolated_f_x(36);
 	print_interpolated_f_x(64);

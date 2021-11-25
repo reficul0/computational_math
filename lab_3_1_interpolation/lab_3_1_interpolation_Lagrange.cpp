@@ -81,6 +81,7 @@ int main()
 	auto y = [](double x) { return sqrt(x); };
 	
 	std::cout << "y = sqrt(x)" << std::endl << std::endl;
+	
 	std::map<double, double> interpolation_table {
 		{100, 10},
 		{121, 11},
@@ -88,6 +89,9 @@ int main()
 		{25, 5},
 		{4, 2},
 	};
+	for (int i = 100; i > 0; i-=4)
+		interpolation_table.emplace(i, y(i));
+	
 	std::cout << "Interpolation table:" << std::endl;
 	for (const auto x_y : interpolation_table)
 	{
@@ -101,16 +105,18 @@ int main()
 
 	auto print_f_x = [&Lagrange_polynomial, &y](double x)
 	{
-		const auto interpolation_val = Lagrange_polynomial(x);
+		const auto interpolated_val = Lagrange_polynomial(x);
 		std::cout << "x = " << std::setw(6) << x
-			<< "; y = " << std::setw(6) << std::setprecision(5) << interpolation_val
-			<< "; error = " << std::setw(6) << std::setprecision(5) << std::abs(y(x) - interpolation_val)
+			<< "; y = " << std::setw(6) << std::setprecision(5) << interpolated_val
+			<< "; error = " << std::setw(6) << std::setprecision(5) << std::abs(y(x) - interpolated_val)
 			<< "\n";
 	};
 
 	std::cout << "Interpolation results:" << std::endl;
 	for (const auto x_y : interpolation_table)
 		print_f_x(x_y.first);
+	
+	std::cout << std::endl;
 	print_f_x(115);
 	print_f_x(36);
 	print_f_x(64);
