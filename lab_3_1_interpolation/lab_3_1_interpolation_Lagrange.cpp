@@ -76,8 +76,6 @@ std::function<double(double)> to_Lagrange_polynomial(std::map<double, double> co
 
 int main()
 {
-	setlocale(LC_ALL, "ru_RU");
-
 	auto y = [](double x) { return sqrt(x); };
 	std::cout << "y = sqrt(x)" << std::endl << std::endl;
 	
@@ -102,18 +100,18 @@ int main()
 	std::cout << "Interpolation table:" << std::endl;
 	for (const auto x_y : interpolation_table)
 	{
-		std::cout << "x = " << std::setw(6) << x_y.first
-			<< "; y = " << x_y.second
+		std::cout << "x = " << std::setw(6) << std::setprecision(5) << x_y.first
+			<< "; y = " << std::setw(6) << std::setprecision(5) << x_y.second
 			<< "\n";
 	}
 	std::cout << std::endl;
 
 	auto Lagrange_polynomial = to_Lagrange_polynomial(interpolation_table);
 
-	auto print_f_x = [&Lagrange_polynomial, &y](double x)
+	auto print_interpolated_f_x = [&Lagrange_polynomial, &y](double x)
 	{
 		const auto interpolated_val = Lagrange_polynomial(x);
-		std::cout << "x = " << std::setw(6) << x
+		std::cout << "x = " << std::setw(6) << std::setprecision(5) << x
 			<< "; y = " << std::setw(6) << std::setprecision(5) << interpolated_val
 			<< "; error = " << std::setw(6) << std::setprecision(5) << std::abs(y(x) - interpolated_val)
 			<< "\n";
@@ -121,13 +119,21 @@ int main()
 
 	std::cout << "Interpolation results:" << std::endl;
 	for (const auto x_y : interpolation_table)
-		print_f_x(x_y.first);
+		print_interpolated_f_x(x_y.first);
 	
 	std::cout << std::endl;
-	print_f_x(115);
-	print_f_x(36);
-	print_f_x(64);
+	print_interpolated_f_x(115);
+	print_interpolated_f_x(36);
+	print_interpolated_f_x(64);
 	std::cout << std::endl;
+
+	while(true)
+	{
+		double x = 0;
+		std::cout << "Enter x: ";
+		std::cin >> x;
+		print_interpolated_f_x(x);
+	}
 	
 	system("pause");
 	system("cls");

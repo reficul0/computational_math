@@ -31,8 +31,7 @@ double interpolate_via_Newton(double x, std::map<double/*x*/, double/*y*/> const
 		auto back_next  = back;	 --back_next;
 			
 		return (get_divided_difference(front_next, back)
-			  - get_divided_difference(front, back_next)
-			)
+			  - get_divided_difference(front, back_next))
 			/ (back->first - front->first);
 	};
 
@@ -54,8 +53,6 @@ double interpolate_via_Newton(double x, std::map<double/*x*/, double/*y*/> const
 
 int main()
 {
-	setlocale(LC_ALL, "ru_RU");
-
 	auto y = [](double x) { return sqrt(x); };
 	std::cout << "y = sqrt(x)" << std::endl << std::endl;
 	
@@ -79,8 +76,8 @@ int main()
 	std::cout << "Interpolation table:" << std::endl;
 	for (const auto x_y : interpolation_table)
 	{
-		std::cout << "x = " << std::setw(6) << x_y.first
-			<< "; y = " << x_y.second
+		std::cout << "x = " << std::setw(6) << std::setprecision(5) << x_y.first
+			<< "; y = " << std::setw(6) << std::setprecision(5) << x_y.second
 			<< "\n";
 	}
 	std::cout << std::endl;
@@ -88,7 +85,7 @@ int main()
 	auto print_interpolated_f_x = [&interpolation_table, &y](double x)
 	{
 		const auto interpolated_val = interpolate_via_Newton(x, interpolation_table);
-		std::cout << "x = " << std::setw(6) << x
+		std::cout << "x = " << std::setw(6) << std::setprecision(5) << x
 			<< "; y = " << std::setw(6) << std::setprecision(5) << interpolated_val
 			<< "; error = " << std::setw(6) << std::setprecision(5) << std::abs(y(x) - interpolated_val)
 			<< "\n";
@@ -103,6 +100,14 @@ int main()
 	print_interpolated_f_x(36);
 	print_interpolated_f_x(64);
 	std::cout << std::endl;
+
+	while (true)
+	{
+		double x = 0;
+		std::cout << "Enter x: ";
+		std::cin >> x;
+		print_interpolated_f_x(x);
+	}
 
 	system("pause");
 	system("cls");
