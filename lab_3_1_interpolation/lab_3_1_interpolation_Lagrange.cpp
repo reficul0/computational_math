@@ -7,7 +7,6 @@
 #include <map>
 #include <numeric>
 #include <string>
-#include <unordered_map>
 #include <vector>
 
 std::function<double(double)> to_Lagrange_polynomial(std::map<double, double> const &interpolation_table)
@@ -79,50 +78,44 @@ int main()
 {
 	setlocale(LC_ALL, "ru_RU");
 
-	while (true)
+	auto y = [](double x) { return sqrt(x); };
+	
+	std::cout << "y = sqrt(x)" << std::endl << std::endl;
+	std::map<double, double> interpolation_table {
+		{100, 10},
+		{121, 11},
+		{144, 12},
+		{25, 5},
+		{4, 2},
+	};
+	std::cout << "Interpolation table:" << std::endl;
+	for (const auto x_y : interpolation_table)
 	{
-		/*std::pair<double, double> interval;
-
-		std::cout << "Enter interval [a, b]." << std::endl;
-		std::cout << "Enter a: ";
-		std::cin >> interval.first;
-		std::cout << "Enter b: ";
-		std::cin >> interval.second;*/
-
-		std::cout << "y = sqrt(x)" << std::endl;
-		std::map<double, double> interpolation_table {
-			{100, 10},
-			{121, 11},
-			{144, 12},
-			{25, 5},
-			{2, 4},
-		};
-		std::cout << "Interpolation table:" << std::endl;
-		for (const auto y_by_x : interpolation_table)
-		{
-			std::cout << "x = " << y_by_x.first
-				<< "; y = " << y_by_x.second
-				<< "\n";
-		}
-		std::cout << std::endl;
-
-		auto Lagrange_polynomial = to_Lagrange_polynomial(interpolation_table);
-
-		auto print_f_x = [&Lagrange_polynomial](double x)
-		{
-			std::cout << "x = " << x
-				<< "; y = " << Lagrange_polynomial(x)
-				<< "\n";
-		};
-
-		for (const auto y_by_x : interpolation_table)
-			print_f_x(y_by_x.first);
-		print_f_x(115);
-		print_f_x(36);
-		std::cout << std::endl;
-		
-		system("pause");
-		system("cls");
+		std::cout << "x = " << std::setw(6) << x_y.first
+			<< "; y = " << x_y.second
+			<< "\n";
 	}
+	std::cout << std::endl;
 
+	auto Lagrange_polynomial = to_Lagrange_polynomial(interpolation_table);
+
+	auto print_f_x = [&Lagrange_polynomial, &y](double x)
+	{
+		const auto interpolation_val = Lagrange_polynomial(x);
+		std::cout << "x = " << std::setw(6) << x
+			<< "; y = " << std::setw(6) << std::setprecision(5) << interpolation_val
+			<< "; error = " << std::setw(6) << std::setprecision(5) << std::abs(y(x) - interpolation_val)
+			<< "\n";
+	};
+
+	std::cout << "Interpolation results:" << std::endl;
+	for (const auto x_y : interpolation_table)
+		print_f_x(x_y.first);
+	print_f_x(115);
+	print_f_x(36);
+	print_f_x(64);
+	std::cout << std::endl;
+	
+	system("pause");
+	system("cls");
 }

@@ -20,11 +20,10 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{363F2321-4EF0-4BEA-90EC-9EF8DACE8D8E}</ProjectGuid>
+    <ProjectGuid>{CE1A3A0F-E57E-47E8-B1ED-125A6E6A7BBE}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>lab31interpolation</RootNamespace>
+    <RootNamespace>lab32interpolationNewton</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
-    <ProjectName>lab_3_1_interpolation_Lagrange</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -155,7 +154,7 @@
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="lab_3_1_interpolation_Lagrange.cpp" />
+    <ClCompile Include="lab_3_2_interpolation_Newton.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

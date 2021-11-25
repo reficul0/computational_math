@@ -23,7 +23,7 @@
     <ClCompile Include="pch.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="lab_3_1_interpolation_Lagrange.cpp">
+    <ClCompile Include="lab_3_2_interpolation_Newton.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
