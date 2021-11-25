@@ -65,17 +65,15 @@ int main()
 	std::cin >> interval.first;
 	std::cout << "Enter b: ";
 	std::cin >> interval.second;
+
+	size_t n = 0;
+	std::cout << "Enter n: ";
+	std::cin >> n;
 	std::cout << std::endl;
 
-	std::map<double, double> interpolation_table{
-		{100, 10},
-		{121, 11},
-		{144, 12},
-		{25, 5},
-		{4, 2},
-	};
-	auto h = (interval.second - interval.first) / 8;
-	for (size_t i = interval.first; i <= interval.second; i += h)
+	std::map<double, double> interpolation_table;
+	auto h = (interval.second - interval.first) / n;
+	for (size_t i = interval.first; i < interval.second; i += h)
 		interpolation_table.emplace(i, y(i));
 	
 	std::cout << "Interpolation table:" << std::endl;
