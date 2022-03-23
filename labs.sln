@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.902
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.32126.315
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lab_1_1_root", "lab_1\lab_1.vcxproj", "{0B7AE8C4-825C-4F12-94E7-0D63C29E8043}"
 EndProject
@@ -14,6 +14,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lab_3_1_interpolation_Lagrange", "lab_3_1_interpolation\lab_3_1_interpolation.vcxproj", "{363F2321-4EF0-4BEA-90EC-9EF8DACE8D8E}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lab_3_2_interpolation_Newton", "lab_3_2_interpolation_Newton\lab_3_2_interpolation_Newton.vcxproj", "{CE1A3A0F-E57E-47E8-B1ED-125A6E6A7BBE}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lab_4_1_Gauss", "lab_4_1_Gauss\lab_4_1_Gauss.vcxproj", "{37C574D1-47AA-40BD-84A6-A0E9DC9AC9C9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -71,6 +73,14 @@ Global
 		{CE1A3A0F-E57E-47E8-B1ED-125A6E6A7BBE}.Release|x64.Build.0 = Release|x64
 		{CE1A3A0F-E57E-47E8-B1ED-125A6E6A7BBE}.Release|x86.ActiveCfg = Release|Win32
 		{CE1A3A0F-E57E-47E8-B1ED-125A6E6A7BBE}.Release|x86.Build.0 = Release|Win32
+		{37C574D1-47AA-40BD-84A6-A0E9DC9AC9C9}.Debug|x64.ActiveCfg = Debug|x64
+		{37C574D1-47AA-40BD-84A6-A0E9DC9AC9C9}.Debug|x64.Build.0 = Debug|x64
+		{37C574D1-47AA-40BD-84A6-A0E9DC9AC9C9}.Debug|x86.ActiveCfg = Debug|Win32
+		{37C574D1-47AA-40BD-84A6-A0E9DC9AC9C9}.Debug|x86.Build.0 = Debug|Win32
+		{37C574D1-47AA-40BD-84A6-A0E9DC9AC9C9}.Release|x64.ActiveCfg = Release|x64
+		{37C574D1-47AA-40BD-84A6-A0E9DC9AC9C9}.Release|x64.Build.0 = Release|x64
+		{37C574D1-47AA-40BD-84A6-A0E9DC9AC9C9}.Release|x86.ActiveCfg = Release|Win32
+		{37C574D1-47AA-40BD-84A6-A0E9DC9AC9C9}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
