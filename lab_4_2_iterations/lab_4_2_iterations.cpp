@@ -22,6 +22,41 @@ void PrintLinearEq(std::vector<std::vector<double>>& a, std::vector<double>& f)
     }
 }
 
+double Get1NormOfMatrix(std::vector<std::vector<double>>& a)
+{
+    double max = 0;
+    for (size_t i = 0; i < a.size(); ++i)
+    {
+        double summ = 0.0;
+        for (size_t j = 0; j < a[i].size(); ++j)
+        {
+            if (i == j)
+                continue;
+            summ += abs(a[i][j] / a[i][i]);
+        }
+        if (summ > max)
+            max = summ;
+    }
+    return max;
+}
+double Get2NormOfMatrix(std::vector<std::vector<double>>& a)
+{
+    double max = 0;
+    for (size_t i = 0; i < a.size(); ++i)
+    {
+        double summ = 0.0;
+        for (size_t j = 0; j < a[i].size(); ++j)
+        {
+            if (i == j)
+                continue;
+            summ += abs(a[i][j] / a[j][j]);
+        }
+        if (summ > max)
+            max = summ;
+    }
+    return max;
+}
+
 bool IsEpsilonAchieved(std::vector<double>& x, std::vector<double>& xNext, double eps)
 {
     assert(eps > 0);
@@ -38,6 +73,8 @@ bool IsEpsilonAchieved(std::vector<double>& x, std::vector<double>& xNext, doubl
     return true;
 }
 
+// If fromNext == true, then is Zeydel`s method 
+// else is iteration`s method  
 std::vector<double> NextIteration(
     std::vector<std::vector<double>>& a, std::vector<double>& f, std::vector<double>& x, bool fromNext)
 {
@@ -46,7 +83,7 @@ std::vector<double> NextIteration(
     for (size_t i = 0; i < a.size(); ++i)
     {
         double summ = 0;
-        for (size_t j = 0; j < a.size(); ++j)
+        for (size_t j = 0; j < a[i].size(); ++j)
         {
             if (j == i)
             {
@@ -119,43 +156,49 @@ int main()
 {
     std::vector<std::vector<double>> a
     {
-        { 32, 2, 1, 3, 1 },
-        { 1, 8, 3, 1, 3 },
-        { 1, 2, 16, 3, 1 },
-        { 1, 2, 3, 56, 1 },
-        { 1, 2, 1, 3, 32 }
+        { 32, 2,  1,   1,  3 },
+        { 3,  32, 1,   1,  2 },
+        { 1,  2,  56,  3,  3 },
+        { 2,  3,  1,   56, 3 },
+        { 1,  3,  2,   3,  16 }
     };
 
     std::vector<double> f
     {
-        43,
-        14,
-        -3,
-        169,
-        -19
+        35,
+        67,
+        -45,
+        172,
+        -2
     };
 
-    std::cout << "Source eq: " << std::endl << std::endl;
+    std::cout << "Source eq: " << std::endl;
     PrintLinearEq(a, f);
-
-    //if(!CanSolveByIterations(a))
-    //{
-    //    return EXIT_FAILURE;
-    //}
+    
+    double norm1 = Get1NormOfMatrix(a);
+    double norm2 = Get2NormOfMatrix(a);
+    if(norm1 >= 1 && norm2 >= 1)
+    {
+        if(norm1 >= 1)
+			std::cout << "Can't solve cause ||a||1 = " << norm1 << ", that is >= 1" << std::endl;
+        if (norm2 >= 1)
+            std::cout << "Can't solve cause ||a||2 = " << norm2 << ", that is >= 1" << std::endl;
+        return EXIT_FAILURE;
+    }
 
     while (true)
     {
         double eps = 0;
-        bool isIterations = false;
 
         std::cout << "______________________________________________" << std::endl;
-        std::cout << "Iterations? ";
-
-        std::cin >> isIterations;
         std::cout << "Enter eps: ";
     	std::cin >> eps;
         std::cout << std::endl;
 
-        SolveAndTest(a, f, eps, isIterations);
+        std::cout << "Iterations:\n";
+        SolveAndTest(a, f, eps, true);
+
+        std::cout << "Zeydel:\n";
+        SolveAndTest(a, f, eps, false);
     }
 }
