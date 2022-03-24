@@ -87,7 +87,7 @@ std::vector<double> SolveTriangleMatrix(std::vector<std::vector<double>>& a, std
     return x;
 }
 
-double GetDeterminant(std::vector<std::vector<double>>& a)
+double GetDeterminantOfTriangleMatrix(std::vector<std::vector<double>>& a)
 {
     double det = 1;
 	for(size_t i = 0; i < a.size(); ++i)
@@ -128,7 +128,7 @@ int main()
 	std::cout << std::endl << "Triangle eq: " << std::endl;
     PrintLinearEq(a, f);
 
-    double det = GetDeterminant(a);
+    double det = GetDeterminantOfTriangleMatrix(a);
     std::cout << std::endl << "Determinant = " << det << std::endl;
     if(det == 0)
     {
