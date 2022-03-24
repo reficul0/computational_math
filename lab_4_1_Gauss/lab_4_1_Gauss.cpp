@@ -97,9 +97,6 @@ double GetDeterminantOfTriangleMatrix(std::vector<std::vector<double>>& a)
     return det;
 }
 
-// вход: точность
-// выход кроме корня уровнения, показываем количество итераций
-// проверка: берём корни и подставляем корни в исходное уровнение
 int main()
 {
     std::vector<std::vector<double>> a
