@@ -248,21 +248,9 @@ namespace WindowsFormsApp2
                 return FindRootViaChords(f, xa, xb, imageGraphics);
             }
         }
-        // y = x^3; y = sqrt(x,3);
-        // [-1;1]
+
         public double FindRootViaChords(Func<float, float> f, float xa, float xb, Graphics imageGraphics)
         {
-            //Bitmap b = new Bitmap(m_picture.Width, m_picture.Height);
-            //
-            //m_picture.Invoke((MethodInvoker)delegate
-            //{
-            //    DrawToBitmap(b,
-            //        new Rectangle(
-            //            m_picture.Width / 2, -m_picture.Height / 2, m_picture.Width, m_picture.Height));
-            //});
-            //b.Save("bmp.jpeg", ImageFormat.Jpeg);
-
-
             {
                 var fxa = f(xa);
                 var fxb = f(xb);
@@ -272,77 +260,82 @@ namespace WindowsFormsApp2
                 }
             }
 
-            float xLast;
-            float x = 0;
             int currentIterationNumber = 0;
+            float xLast;
+            float x = CalculateXNext(f, ref xa, ref xb, currentIterationNumber, imageGraphics);
+            ++currentIterationNumber;
             do
             {
                 // check interruption
                 Thread.Sleep(0);
                 xLast = x;
-                var fxb = f(xb);
-                var fxa = f(xa);
 
-                x = xb - fxb * (xb - xa) / (fxb - fxa);
-                var fX = mSelectedFunc(x);
-                {
-                    var scaledX = ScaleCoord(x);
-
-                    mSolutionLabel.Invoke(
-                        (MethodInvoker)delegate
-                        {
-                            mSolutionLabel.Text = "x[" + currentIterationNumber + "] = " + x
-                                                 + "\nf(x) = " + fX;
-                        });
-
-                    Thread.Sleep(GetAnimationSleepTimeout(200));
-
-                    imageGraphics.DrawLine(Resources.mInfoPen,
-                        ScaleCoord(xb), ScaleCoord(MapYToCurrentCoordinateSystem(f(xb))),
-                        ScaleCoord(xa), ScaleCoord(MapYToCurrentCoordinateSystem(f(xa))));
-
-                    SizeF pointSize = new SizeF(8, 8);
-                    float pointShift = -4;
-
-                    Thread.Sleep(GetAnimationSleepTimeout(200));
-                    
-                    // point on X axis
-                    imageGraphics.FillEllipse(
-                        Resources.mInfoBrush,
-                        new RectangleF(new PointF(scaledX + pointShift, MapYToCurrentCoordinateSystem(-pointShift)), pointSize)
-                    );
-                    imageGraphics.DrawString(
-                        "x[" + currentIterationNumber + "]", Resources.mSolutionFont, Resources.mSolutionBrush,
-                        scaledX,
-                        MapYToCurrentCoordinateSystem(mYShiftForTextAboveX)
-                    );
-
-                    Thread.Sleep(GetAnimationSleepTimeout(500));
-
-                    imageGraphics.DrawLine(Resources.mSolutionPen, scaledX, 0, scaledX, ScaleCoord(-fX));
-                    // point on function
-                    imageGraphics.FillEllipse(
-                        Resources.mFunctionBrush,
-                        new RectangleF(
-                            new PointF(scaledX + pointShift,
-                                              ScaleCoord(MapYToCurrentCoordinateSystem(fX)) + pointShift),
-                            pointSize)
-                    );
-                }
-
-                if (f(x) * f(xa) > 0)
-                {
-                    xa = x;
-                }
-                else
-                {
-                    xb = x;
-                }
-
+                x = CalculateXNext(f, ref xa, ref xb, currentIterationNumber, imageGraphics);
                 ++currentIterationNumber;
             }
             while (Math.Abs(x - xLast) > epsilon
                     && currentIterationNumber < iterationsLimit);
+
+            return x;
+        }
+        private float CalculateXNext(Func<float, float> f, ref float xa, ref float xb, int currentIterationNumber, Graphics imageGraphics)
+        {
+            float x = xb - f(xb) * (xb - xa) / (f(xb) - f(xa));
+
+            var fX = f(x);
+            {
+                var scaledX = ScaleCoord(x);
+
+                mSolutionLabel.Invoke(
+                    (MethodInvoker)delegate
+                    {
+                        mSolutionLabel.Text = "x[" + currentIterationNumber + "] = " + x
+                                             + "\nf(x) = " + fX;
+                    });
+
+                Thread.Sleep(GetAnimationSleepTimeout(200));
+
+                imageGraphics.DrawLine(Resources.mInfoPen,
+                    ScaleCoord(xb), ScaleCoord(MapYToCurrentCoordinateSystem(f(xb))),
+                    ScaleCoord(xa), ScaleCoord(MapYToCurrentCoordinateSystem(f(xa))));
+
+                SizeF pointSize = new SizeF(8, 8);
+                float pointShift = -4;
+
+                Thread.Sleep(GetAnimationSleepTimeout(200));
+
+                // point on X axis
+                imageGraphics.FillEllipse(
+                    Resources.mInfoBrush,
+                    new RectangleF(new PointF(scaledX + pointShift, MapYToCurrentCoordinateSystem(-pointShift)), pointSize)
+                );
+                imageGraphics.DrawString(
+                    "x[" + currentIterationNumber + "]", Resources.mSolutionFont, Resources.mSolutionBrush,
+                    scaledX,
+                    MapYToCurrentCoordinateSystem(mYShiftForTextAboveX)
+                );
+
+                Thread.Sleep(GetAnimationSleepTimeout(500));
+
+                imageGraphics.DrawLine(Resources.mSolutionPen, scaledX, 0, scaledX, ScaleCoord(-fX));
+                // point on function
+                imageGraphics.FillEllipse(
+                    Resources.mFunctionBrush,
+                    new RectangleF(
+                        new PointF(scaledX + pointShift,
+                                          ScaleCoord(MapYToCurrentCoordinateSystem(fX)) + pointShift),
+                        pointSize)
+                );
+            }
+
+            if (f(x) * f(xa) > 0)
+            {
+                xa = x;
+            }
+            else
+            {
+                xb = x;
+            }
 
             return x;
         }
@@ -391,12 +384,12 @@ namespace WindowsFormsApp2
                         // Draw Y
                         imageGraphics.DrawLine(Resources.mAxisPointsPen, halfPointLen, scaledValue, -halfPointLen, scaledValue);
                         imageGraphics.DrawString(
-                            currentValue.ToString(), Resources.mAxisPointsFont, Resources.mAxisPointsBrush,
+                            (-currentValue).ToString(), Resources.mAxisPointsFont, Resources.mAxisPointsBrush,
                             axisPointsTextShift, scaledValue);
 
                         imageGraphics.DrawLine(Resources.mAxisPointsPen, halfPointLen, -scaledValue, -halfPointLen, -scaledValue);
                         imageGraphics.DrawString(
-                            (-currentValue).ToString(), Resources.mAxisPointsFont, Resources.mAxisPointsBrush,
+                            currentValue.ToString(), Resources.mAxisPointsFont, Resources.mAxisPointsBrush,
                             axisPointsTextShift, -scaledValue);
                     }
                 }
