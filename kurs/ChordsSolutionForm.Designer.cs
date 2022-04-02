@@ -32,11 +32,11 @@ namespace WindowsFormsApp2
             this.m_picture = new System.Windows.Forms.PictureBox();
             this.mSolveButton = new System.Windows.Forms.Button();
             this.mResetButton = new System.Windows.Forms.Button();
-            this.mRotationAngleUpDown = new System.Windows.Forms.NumericUpDown();
-            this.mAngleLabel = new System.Windows.Forms.Label();
-            this.mXScalarLabel = new System.Windows.Forms.Label();
-            this.mXScalarUpDown = new System.Windows.Forms.NumericUpDown();
             this.mSolutionSettingsGroupBox = new System.Windows.Forms.GroupBox();
+            this.mFunctionsComboBox = new System.Windows.Forms.ComboBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.mEpsilonLabel = new System.Windows.Forms.Label();
+            this.mEpsilonTextBox = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.mAnimationSpeedTrackBar = new System.Windows.Forms.TrackBar();
             this.mBBoundLabel = new System.Windows.Forms.Label();
@@ -45,11 +45,7 @@ namespace WindowsFormsApp2
             this.mABoundTextBox = new System.Windows.Forms.TextBox();
             this.mXAndYInfoLabel = new System.Windows.Forms.Label();
             this.mSolutionLabel = new System.Windows.Forms.Label();
-            this.mEpsilonLabel = new System.Windows.Forms.Label();
-            this.mEpsilonTextBox = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.m_picture)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.mRotationAngleUpDown)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.mXScalarUpDown)).BeginInit();
             this.mSolutionSettingsGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.mAnimationSpeedTrackBar)).BeginInit();
             this.SuspendLayout();
@@ -72,6 +68,7 @@ namespace WindowsFormsApp2
             // mSolveButton
             // 
             this.mSolveButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.mSolveButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.mSolveButton.Location = new System.Drawing.Point(513, 662);
             this.mSolveButton.Name = "mSolveButton";
             this.mSolveButton.Size = new System.Drawing.Size(106, 34);
@@ -83,6 +80,7 @@ namespace WindowsFormsApp2
             // mResetButton
             // 
             this.mResetButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.mResetButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.mResetButton.Location = new System.Drawing.Point(625, 662);
             this.mResetButton.Name = "mResetButton";
             this.mResetButton.Size = new System.Drawing.Size(110, 34);
@@ -91,73 +89,11 @@ namespace WindowsFormsApp2
             this.mResetButton.UseVisualStyleBackColor = true;
             this.mResetButton.Click += new System.EventHandler(this.mResetButton_Click);
             // 
-            // mRotationAngleUpDown
-            // 
-            this.mRotationAngleUpDown.Location = new System.Drawing.Point(373, 32);
-            this.mRotationAngleUpDown.Maximum = new decimal(new int[] {
-            1000000,
-            0,
-            0,
-            0});
-            this.mRotationAngleUpDown.Minimum = new decimal(new int[] {
-            1000000,
-            0,
-            0,
-            -2147483648});
-            this.mRotationAngleUpDown.Name = "mRotationAngleUpDown";
-            this.mRotationAngleUpDown.Size = new System.Drawing.Size(52, 20);
-            this.mRotationAngleUpDown.TabIndex = 9;
-            this.mRotationAngleUpDown.Value = new decimal(new int[] {
-            30,
-            0,
-            0,
-            0});
-            // 
-            // mAngleLabel
-            // 
-            this.mAngleLabel.AutoSize = true;
-            this.mAngleLabel.Location = new System.Drawing.Point(370, 16);
-            this.mAngleLabel.Name = "mAngleLabel";
-            this.mAngleLabel.Size = new System.Drawing.Size(37, 13);
-            this.mAngleLabel.TabIndex = 10;
-            this.mAngleLabel.Text = "Angle:";
-            // 
-            // mXScalarLabel
-            // 
-            this.mXScalarLabel.AutoSize = true;
-            this.mXScalarLabel.Location = new System.Drawing.Point(431, 16);
-            this.mXScalarLabel.Name = "mXScalarLabel";
-            this.mXScalarLabel.Size = new System.Drawing.Size(48, 13);
-            this.mXScalarLabel.TabIndex = 12;
-            this.mXScalarLabel.Text = "X scalar:";
-            // 
-            // mXScalarUpDown
-            // 
-            this.mXScalarUpDown.DecimalPlaces = 3;
-            this.mXScalarUpDown.Location = new System.Drawing.Point(434, 32);
-            this.mXScalarUpDown.Maximum = new decimal(new int[] {
-            1000000,
-            0,
-            0,
-            0});
-            this.mXScalarUpDown.Minimum = new decimal(new int[] {
-            1000000,
-            0,
-            0,
-            -2147483648});
-            this.mXScalarUpDown.Name = "mXScalarUpDown";
-            this.mXScalarUpDown.Size = new System.Drawing.Size(56, 20);
-            this.mXScalarUpDown.TabIndex = 11;
-            this.mXScalarUpDown.ThousandsSeparator = true;
-            this.mXScalarUpDown.Value = new decimal(new int[] {
-            15,
-            0,
-            0,
-            65536});
-            // 
             // mSolutionSettingsGroupBox
             // 
             this.mSolutionSettingsGroupBox.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.mSolutionSettingsGroupBox.Controls.Add(this.mFunctionsComboBox);
+            this.mSolutionSettingsGroupBox.Controls.Add(this.label2);
             this.mSolutionSettingsGroupBox.Controls.Add(this.mEpsilonLabel);
             this.mSolutionSettingsGroupBox.Controls.Add(this.mEpsilonTextBox);
             this.mSolutionSettingsGroupBox.Controls.Add(this.label1);
@@ -166,31 +102,64 @@ namespace WindowsFormsApp2
             this.mSolutionSettingsGroupBox.Controls.Add(this.mBBoundTextBox);
             this.mSolutionSettingsGroupBox.Controls.Add(this.mABoundLabel);
             this.mSolutionSettingsGroupBox.Controls.Add(this.mABoundTextBox);
-            this.mSolutionSettingsGroupBox.Controls.Add(this.mRotationAngleUpDown);
-            this.mSolutionSettingsGroupBox.Controls.Add(this.mAngleLabel);
-            this.mSolutionSettingsGroupBox.Controls.Add(this.mXScalarLabel);
-            this.mSolutionSettingsGroupBox.Controls.Add(this.mXScalarUpDown);
-            this.mSolutionSettingsGroupBox.Location = new System.Drawing.Point(169, 702);
+            this.mSolutionSettingsGroupBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.mSolutionSettingsGroupBox.Location = new System.Drawing.Point(251, 701);
             this.mSolutionSettingsGroupBox.Name = "mSolutionSettingsGroupBox";
-            this.mSolutionSettingsGroupBox.Size = new System.Drawing.Size(876, 87);
+            this.mSolutionSettingsGroupBox.Size = new System.Drawing.Size(751, 87);
             this.mSolutionSettingsGroupBox.TabIndex = 15;
             this.mSolutionSettingsGroupBox.TabStop = false;
             this.mSolutionSettingsGroupBox.Text = "Solution settings";
             // 
+            // mFunctionsComboBox
+            // 
+            this.mFunctionsComboBox.FormattingEnabled = true;
+            this.mFunctionsComboBox.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.mFunctionsComboBox.Location = new System.Drawing.Point(371, 45);
+            this.mFunctionsComboBox.Name = "mFunctionsComboBox";
+            this.mFunctionsComboBox.Size = new System.Drawing.Size(121, 24);
+            this.mFunctionsComboBox.TabIndex = 30;
+            this.mFunctionsComboBox.SelectedValueChanged += new System.EventHandler(this.mFunctionsComboBox_SelectedValueChanged);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(368, 26);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(62, 17);
+            this.label2.TabIndex = 29;
+            this.label2.Text = "function:";
+            // 
+            // mEpsilonLabel
+            // 
+            this.mEpsilonLabel.AutoSize = true;
+            this.mEpsilonLabel.Location = new System.Drawing.Point(250, 26);
+            this.mEpsilonLabel.Name = "mEpsilonLabel";
+            this.mEpsilonLabel.Size = new System.Drawing.Size(35, 17);
+            this.mEpsilonLabel.TabIndex = 27;
+            this.mEpsilonLabel.Text = "eps:";
+            // 
+            // mEpsilonTextBox
+            // 
+            this.mEpsilonTextBox.Location = new System.Drawing.Point(253, 45);
+            this.mEpsilonTextBox.Name = "mEpsilonTextBox";
+            this.mEpsilonTextBox.Size = new System.Drawing.Size(100, 23);
+            this.mEpsilonTextBox.TabIndex = 26;
+            this.mEpsilonTextBox.TextChanged += new System.EventHandler(this.mEpsilonTextBox_TextChanged);
+            // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(629, 26);
+            this.label1.Location = new System.Drawing.Point(500, 26);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(85, 13);
+            this.label1.Size = new System.Drawing.Size(116, 17);
             this.label1.TabIndex = 25;
-            this.label1.Text = "Animation speed";
+            this.label1.Text = "animation speed:";
             // 
             // mAnimationSpeedTrackBar
             // 
             this.mAnimationSpeedTrackBar.AutoSize = false;
             this.mAnimationSpeedTrackBar.LargeChange = 10;
-            this.mAnimationSpeedTrackBar.Location = new System.Drawing.Point(632, 45);
+            this.mAnimationSpeedTrackBar.Location = new System.Drawing.Point(499, 41);
             this.mAnimationSpeedTrackBar.Maximum = 500;
             this.mAnimationSpeedTrackBar.Minimum = 1;
             this.mAnimationSpeedTrackBar.Name = "mAnimationSpeedTrackBar";
@@ -203,34 +172,34 @@ namespace WindowsFormsApp2
             // mBBoundLabel
             // 
             this.mBBoundLabel.AutoSize = true;
-            this.mBBoundLabel.Location = new System.Drawing.Point(124, 26);
+            this.mBBoundLabel.Location = new System.Drawing.Point(125, 26);
             this.mBBoundLabel.Name = "mBBoundLabel";
-            this.mBBoundLabel.Size = new System.Drawing.Size(63, 13);
+            this.mBBoundLabel.Size = new System.Drawing.Size(84, 17);
             this.mBBoundLabel.TabIndex = 23;
             this.mBBoundLabel.Text = "right bound:";
             // 
             // mBBoundTextBox
             // 
-            this.mBBoundTextBox.Location = new System.Drawing.Point(127, 45);
+            this.mBBoundTextBox.Location = new System.Drawing.Point(128, 45);
             this.mBBoundTextBox.Name = "mBBoundTextBox";
-            this.mBBoundTextBox.Size = new System.Drawing.Size(100, 20);
+            this.mBBoundTextBox.Size = new System.Drawing.Size(100, 23);
             this.mBBoundTextBox.TabIndex = 22;
             this.mBBoundTextBox.TextChanged += new System.EventHandler(this.mBBoundTextBox_TextChanged);
             // 
             // mABoundLabel
             // 
             this.mABoundLabel.AutoSize = true;
-            this.mABoundLabel.Location = new System.Drawing.Point(17, 26);
+            this.mABoundLabel.Location = new System.Drawing.Point(18, 26);
             this.mABoundLabel.Name = "mABoundLabel";
-            this.mABoundLabel.Size = new System.Drawing.Size(57, 13);
+            this.mABoundLabel.Size = new System.Drawing.Size(75, 17);
             this.mABoundLabel.TabIndex = 21;
             this.mABoundLabel.Text = "left bound:";
             // 
             // mABoundTextBox
             // 
-            this.mABoundTextBox.Location = new System.Drawing.Point(20, 45);
+            this.mABoundTextBox.Location = new System.Drawing.Point(21, 45);
             this.mABoundTextBox.Name = "mABoundTextBox";
-            this.mABoundTextBox.Size = new System.Drawing.Size(100, 20);
+            this.mABoundTextBox.Size = new System.Drawing.Size(100, 23);
             this.mABoundTextBox.TabIndex = 20;
             this.mABoundTextBox.TextChanged += new System.EventHandler(this.mABoundTextBox_TextChanged);
             // 
@@ -254,23 +223,6 @@ namespace WindowsFormsApp2
             this.mSolutionLabel.TabIndex = 17;
             this.mSolutionLabel.Text = "Solution";
             // 
-            // mEpsilonLabel
-            // 
-            this.mEpsilonLabel.AutoSize = true;
-            this.mEpsilonLabel.Location = new System.Drawing.Point(249, 24);
-            this.mEpsilonLabel.Name = "mEpsilonLabel";
-            this.mEpsilonLabel.Size = new System.Drawing.Size(27, 13);
-            this.mEpsilonLabel.TabIndex = 27;
-            this.mEpsilonLabel.Text = "eps:";
-            // 
-            // mEpsilonTextBox
-            // 
-            this.mEpsilonTextBox.Location = new System.Drawing.Point(252, 43);
-            this.mEpsilonTextBox.Name = "mEpsilonTextBox";
-            this.mEpsilonTextBox.Size = new System.Drawing.Size(100, 20);
-            this.mEpsilonTextBox.TabIndex = 26;
-            this.mEpsilonTextBox.TextChanged += new System.EventHandler(this.mEpsilonTextBox_TextChanged);
-            // 
             // ChordsSolutionForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -286,8 +238,6 @@ namespace WindowsFormsApp2
             this.Name = "ChordsSolutionForm";
             this.Text = "ChordsSolutionForm";
             ((System.ComponentModel.ISupportInitialize)(this.m_picture)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.mRotationAngleUpDown)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.mXScalarUpDown)).EndInit();
             this.mSolutionSettingsGroupBox.ResumeLayout(false);
             this.mSolutionSettingsGroupBox.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.mAnimationSpeedTrackBar)).EndInit();
@@ -301,10 +251,6 @@ namespace WindowsFormsApp2
         private System.Windows.Forms.PictureBox m_picture;
         private System.Windows.Forms.Button mSolveButton;
         private System.Windows.Forms.Button mResetButton;
-        private System.Windows.Forms.NumericUpDown mRotationAngleUpDown;
-        private System.Windows.Forms.Label mAngleLabel;
-        private System.Windows.Forms.Label mXScalarLabel;
-        private System.Windows.Forms.NumericUpDown mXScalarUpDown;
         private System.Windows.Forms.GroupBox mSolutionSettingsGroupBox;
         private System.Windows.Forms.Label mXAndYInfoLabel;
         private System.Windows.Forms.Label mSolutionLabel;
@@ -316,6 +262,8 @@ namespace WindowsFormsApp2
         private System.Windows.Forms.TrackBar mAnimationSpeedTrackBar;
         private System.Windows.Forms.Label mEpsilonLabel;
         private System.Windows.Forms.TextBox mEpsilonTextBox;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.ComboBox mFunctionsComboBox;
     }
 }
 

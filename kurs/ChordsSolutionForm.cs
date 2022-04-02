@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -15,6 +16,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows;
 using System.Windows.Input;
+using ComboBox = System.Windows.Forms.ComboBox;
 
 namespace WindowsFormsApp2
 {
@@ -22,25 +24,43 @@ namespace WindowsFormsApp2
     {
         private static float Foo(float x)
         {
-            return x * x * x / 10000 - 10;
+            var newX = x + 1;
+            return newX * newX - 1.5f;
         }
-        // [-10, 0.5f] root = [0, 0]
         private static float Foo2(float x)
         {
-            return -(x - 1) * (x - 1) * (x - 1) + x*x - 1;
+            var newX = (-x - 1);
+            return newX * newX * newX + x*x - 1;
         }
 
+        private static float Foo3(float x)
+        {
+            return (-Math.Abs(x-0.1f) + 0.6f);
+        }
+
+        Dictionary<String, Func<float, float>> mFunctionsByNameList = new Dictionary<String, Func<float, float>>
+        {
+            { "|x|", Foo3 },
+            { "(-x-1)^3 + x^2 - 1", Foo2 },
+            { "(x + 1)^2 - 1.5f", Foo }
+        };
+        
         public ChordsSolutionForm()
         {
             InitializeComponent();
 
-            UpdateAxisPointsDrawingStep();
-
             m_picture.MouseWheel += mPicture_MouseWheel;
 
-            mSelectedFunc = Foo2;
-
             this.ResizeRedraw = true;
+
+            mFunctionsComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
+            foreach (var functionByNameObj in mFunctionsByNameList)
+            {
+                var functionByName = (KeyValuePair<String, Func<float, float>>)functionByNameObj;
+                mFunctionsComboBox.Items.Insert(0, functionByName.Key);
+            }
+
+            mFunctionsComboBox.SelectedIndex = 0;
 
             Reset();
         }
@@ -49,21 +69,37 @@ namespace WindowsFormsApp2
         {
             RedrawAxisAndFunction();
 
-            mWorker = new Thread(
-                () =>
-                {
-                    try
+            mSolveButton.Enabled = false;
+            mSolveButton.Text = "Solving...";
+            lock (mSettingsMutex)
+            {
+                mWorker = new Thread(
+                    () =>
                     {
-                        FindRootViaChords(mSelectedFunc, a, b);
+                        try
+                        {
+                            FindRootViaChords(mSelectedFunc, a, b);
 
-                    }
-                    catch (Exception err)
-                    {
-                        MessageBox.Show(this, err.Message, "Error",
-                            MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-                });
-            mWorker.Start();
+                        }
+                        catch (ThreadInterruptedException)
+                        {
+                            return;
+                        }
+                        catch (Exception err)
+                        {
+                            System.Windows.Forms.MessageBox.Show(this, err.Message, "Error",
+                                MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+
+                        mSolveButton.Invoke(
+                            (MethodInvoker)delegate
+                            {
+                                mSolveButton.Text = "Solve";
+                                mSolveButton.Enabled = true;
+                            });
+                    });
+                mWorker.Start();
+            }
         }
 
         private void mPicture_Resize(object sender, EventArgs e)
@@ -87,7 +123,7 @@ namespace WindowsFormsApp2
 
             mXAndYInfoLabel.Text =
                 "x: " + ((e.X - m_picture.Width / 2 + mCenterXPos) / mGraphicScale) +
-                " y: " + ((e.Y - m_picture.Height / 2 + mCenterYPos) / mGraphicScale);
+                " y: " + (MapYToCurrentCoordinateSystem(e.Y - m_picture.Height / 2 + mCenterYPos) / mGraphicScale);
         }
 
         private void mPicture_MouseWheel(object sender, MouseEventArgs e)
@@ -110,7 +146,7 @@ namespace WindowsFormsApp2
             }
             catch (Exception err)
             {
-                MessageBox.Show(this, err.Message, "Error",
+                System.Windows.Forms.MessageBox.Show(this, err.Message, "Error",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
                 mABoundTextBox.Undo();
             }
@@ -123,7 +159,7 @@ namespace WindowsFormsApp2
             }
             catch (Exception err)
             {
-                MessageBox.Show(this, err.Message, "Error",
+                System.Windows.Forms.MessageBox.Show(this, err.Message, "Error",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
                 mBBoundTextBox.Undo();
             }
@@ -137,10 +173,16 @@ namespace WindowsFormsApp2
             }
             catch (Exception err)
             {
-                MessageBox.Show(this, err.Message, "Error",
+                System.Windows.Forms.MessageBox.Show(this, err.Message, "Error",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
                 mEpsilonTextBox.Undo();
             }
+        }
+
+        private void mFunctionsComboBox_SelectedValueChanged(object sender, EventArgs e)
+        {
+            string selectedFunctionDescr = (string)mFunctionsComboBox.SelectedItem;
+            mSelectedFunc = mFunctionsByNameList[selectedFunctionDescr];
         }
 
         private void mAnimationSpeedTrackBar_Scroll(object sender, EventArgs e)
@@ -153,7 +195,6 @@ namespace WindowsFormsApp2
 
         #endregion
 
-
         private void mResetButton_Click(object sender, EventArgs e)
         {
             Reset();
@@ -161,6 +202,15 @@ namespace WindowsFormsApp2
         
         private void Reset()
         {
+            if (mWorker != null && mWorker.IsAlive)
+            {
+                mWorker.Interrupt();
+                mWorker.Join();
+
+                mSolveButton.Text = "Solve";
+                mSolveButton.Enabled = true;
+            }
+
             mAxisPointsDrawingStep = mStartingAxisPointsDrawingStep;
 
             mCenterXPos = 0;
@@ -175,8 +225,8 @@ namespace WindowsFormsApp2
 
             mFunctionPointsStep = 0.01f;
 
-            //mGraphicScale = 5f;
-            //UpdateAxisPointsDrawingStep();
+            mGraphicScale = 5f;
+            UpdateAxisPointsDrawingStep();
 
             RedrawAxisAndFunction();
         }
@@ -213,9 +263,13 @@ namespace WindowsFormsApp2
             //b.Save("bmp.jpeg", ImageFormat.Jpeg);
 
 
-            if (f(xa) * f(xb) >= 0)
             {
-                throw new ArgumentException("f(a) and f(b) should have opposite signs.");
+                var fxa = f(xa);
+                var fxb = f(xb);
+                if (fxa != 0 && fxb!=0 && f(xa) * f(xb) >= 0)
+                {
+                    throw new ArgumentException("f(a) and f(b) should have opposite signs.");
+                }
             }
 
             float xLast;
@@ -223,6 +277,8 @@ namespace WindowsFormsApp2
             int currentIterationNumber = 0;
             do
             {
+                // check interruption
+                Thread.Sleep(0);
                 xLast = x;
                 var fxb = f(xb);
                 var fxa = f(xa);
@@ -285,7 +341,8 @@ namespace WindowsFormsApp2
 
                 ++currentIterationNumber;
             }
-            while (Math.Abs(x - xLast) > epsilon || (xb - xa) <= epsilon || currentIterationNumber > iterationsLimit);
+            while (Math.Abs(x - xLast) > epsilon
+                    && currentIterationNumber < iterationsLimit);
 
             return x;
         }
@@ -492,6 +549,7 @@ namespace WindowsFormsApp2
         private Func<float, float> mSelectedFunc;
 
         private object mSettingsMutex = new object();
+
     }
 
     public static class Resources
