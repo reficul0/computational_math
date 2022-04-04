@@ -40,7 +40,7 @@ namespace WindowsFormsApp2
 
         Dictionary<String, Func<float, float>> mFunctionsByNameList = new Dictionary<String, Func<float, float>>
         {
-            { "|x|", Foo3 },
+            { "-|x-0.1| + 0.6", Foo3 },
             { "(-x-1)^3 + x^2 - 1", Foo2 },
             { "(x + 1)^2 - 1.5f", Foo }
         };
